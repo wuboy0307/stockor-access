@@ -26,7 +26,7 @@ module Skr
         # @param model [Skr::Model]
         # @param attribute [Symbol]
         # @return [Boolean] Can the User view the model?
-        def can_read?(model, attribute = '')
+        def can_read?(model, attribute = nil)
             roles.can_read?(model, attribute)
         end
 

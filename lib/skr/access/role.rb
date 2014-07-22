@@ -22,6 +22,10 @@ module Skr
                 self.delete.push( *klasses )
             end
 
+            def self.lock( klass, attribute )
+                LockedFields.lock klass, attribute, self # Customer, :terms_id, to: Accounting, only: :write
+            end
+
             def initialize(user)
                 @user = user
             end

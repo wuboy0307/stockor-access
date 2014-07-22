@@ -8,8 +8,10 @@ module Skr
   end
 end
 
+require_relative 'access/locked_fields'
 require_relative 'access/role'
 require_relative 'access/role_collection'
+require_relative 'access/roles_serializer'
 
 require_relative 'access/api_authentication_provider'
 if Skr.const_defined?('Workspace')
@@ -17,4 +19,3 @@ if Skr.const_defined?('Workspace')
     require_relative 'access/workspace_extension'
 end
 require_relative 'user'
-require_relative 'access/global_grants'

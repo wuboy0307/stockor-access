@@ -19,9 +19,10 @@ class UserTest < Skr::TestCase
     end
 
     def test_roles
-        @user.role_names = ['admin']
+        @user.role_names = ['administrator']
         assert_saves @user
-        assert_equal [:admin], @user.roles.to_sym
+        assert_equal [ 'administrator' ], @user.role_names
+        assert_equal [ :administrator  ], @user.roles.to_sym
     end
 
 

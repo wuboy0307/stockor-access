@@ -1,4 +1,4 @@
-require 'skr/api/configuration'
+require 'skr/api'
 
 module Skr
     module Access

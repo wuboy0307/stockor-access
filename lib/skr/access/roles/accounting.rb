@@ -1,10 +1,17 @@
 module Skr
     module Access
 
-        class Accounting < Role
-            self.grant GlAccount, GlManualEntry, GlPosting, GlTransaction
-            self.read << GlPeriod
+        module Roles
+
+            class Accounting < Role
+                self.grant GlAccount, GlManualEntry, GlPosting, GlTransaction
+                self.read << GlPeriod
+
+                lock Customer, :terms_id
+            end
         end
+
+        #LockedFields.lock Customer, :terms_id, to: Accounting, only: :write
 
         # module Customer
 
