@@ -1,4 +1,3 @@
-require 'pry'
 module Skr
     module Access
 
@@ -10,7 +9,7 @@ module Skr
 
             def bootstrap_data(view)
                 if (user_id = view.session[:user_id]) && (user = Skr::User.where( id: user_id ).first)
-                    { user: user.exposed_data }
+                    { user: user.exposed_data, access: Access.for_user(user) }
                 else
                     {}
                 end

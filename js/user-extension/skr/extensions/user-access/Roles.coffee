@@ -1,83 +1,73 @@
-# N.B. Keep in sync with lib/skr/acces/roles.rb
 
-Skr.Extension.UserAccess.define_roles = ->
+RWD = ['read','write','delete']
+#UNIVERSAL_GRANTS = -> [ Skr.Data.Address ]
 
-    CRUD = ['create','read','update','delete']
-    UNIVERSAL_GRANTS = [ Skr.Data.Address ]
 
-    class Role
-        @grant: (types,klasses...)->
-            types = [types] if Skr.u.isString(types)
-            klasses = Skr.u.map( klasses, (klass)->
-                if Skr.u.isString(klass) then Skr.getPath(klass,"Skr.Data") else klass
-            )
-            for method in types
-                this.prototype[method] = (this.prototype[method]|| []).concat( klasses )
+class LockedField
+    constructor: (@klass,config)->
+        Skr.u.extend(this, config)
 
-        constructor: ->
-            for method in CRUD
-                this[method] = ( this[method] ||= [] ).concat( UNIVERSAL_GRANTS )
+class Role
 
-        can: (type,model)->
-            if model instanceof Skr.Ampersand.Model
-                model = model.constructor
-            -1 != this[type].indexOf(model)
+    constructor: (config={})->
+        @type = config.type
+        for method in RWD
+            this[method] = Skr.u.map(config[method],klassFor) #).concat( UNIVERSAL_GRANTS )
 
-        canCreate:(model)->
-            @can('create',model)
+    can: (type,model)->
+        -1 != this[type].indexOf(model)
 
-        canRead:(model)->
-            @can('read',model)
 
-        canUpdate:(model)->
-            @can('update',model)
+Skr.Extension.UserAccess.RoleMap = {
+    administrator    : Administrator
+}
 
-        canDelete:(model)->
-            @can('delete',model)
+# The admin is special and can do anything
+class Administrator extends Role
+    can: -> true
 
-    class Administrator extends Role
-        can: -> true
+class Skr.Extension.UserAccess.RoleCollection
+    constructor: (access)->
+        @roles = []
+        for role in access.roles
+            klass = Skr.Extension.UserAccess.RoleMap[role.type] || Role
+            @roles.push( new klass(role) )
+        @locked_fields = {}
+        for lock in access.locked_fields
+            if klass = klassFor(lock.type)
+                @locked_fields[ klass ] = locks = {}
+                for field, grants of lock.locks
+                    locks[field] = grants
 
-    class CustomerSupport extends Role
-        @grant CRUD,   'Customer', 'SalesOrder', 'Invoice'
-        @grant 'read', 'PurchaseOrder', 'Vendor'
 
-    class Purchasing extends Role
-        @grant CRUD, 'Vendor', 'PurchaseOrder'
+    can:(method,model,field)->
+        if model instanceof Skr.Ampersand.Model
+            model = model.constructor
 
-    class Accounting extends Role
-        @grant CRUD,  'GlAccount', 'GlManualEntry', 'GlPosting', 'GlTransaction'
-        @grant 'read','GlPeriod'
+        if field && ( locks = @locked_fields[model] ) && ( grants = locks[field] )
+            for grant in grants
+                if grant.only && grant.only != method
+                    return this.testModelAccess(method,model)
+                else
+                    for role in @roles
+                        return true if role.type == grant.role
+            return false
+        else
+            return this.testModelAccess(method,model)
 
-    RoleMap = {
-        administrator    : Administrator
-        customer_support : CustomerSupport
-        purchasing       : Purchasing
-        accounting       : Accounting
-    }
+    testModelAccess:(method,model)->
+        !!Skr.u.detect( @roles, (role)->role.can(method,model) )
 
-    class Skr.Extension.UserAccess.RoleCollection
-        constructor: (roles,user)->
-            @all = Skr.u.map( roles, (role)->
-                new RoleMap[role](user)
-            ,this)
+    canRead:(model,field)->
+        this.can('read',model,field)
 
-        grantsFor: (model)->
-            ret = {}
-            ret[method] = this.can(method,model) for method in CRUD
-            ret
+    canWrite:(model,field)->
+        this.can('write',model,field)
 
-        can:(method,model)->
-            !!Skr.u.detect( @all, (role)->role.can(method,model) )
+    canDelete:(model)->
+        this.can('delete',model)
 
-        canCreate:(model)->
-            this.can('create',model)
 
-        canRead:(model)->
-            this.can('read',model)
-
-        canUpdate:(model)->
-            this.can('update',model)
-
-        canDelete:(model)->
-            this.can('delete',model)
+klassFor = (identifier)->
+    Skr.Data[ Skr.u.titleize(identifier).replace(" ","") ] ||
+        Skr.warn("Role Data object not found for #{identifier}")

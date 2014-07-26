@@ -14,29 +14,24 @@ module Skr
                 @roles.map{ |role| role.class.to_s.demodulize.downcase }
             end
 
-            def can?(type, model, data)
-                !!@roles.detect{ |role| role.can(type, model, data) }
-            end
-
             # @param model [Skr::Model]
             # @param attribute [Symbol]
             # @return [Boolean] Can the User view the model?
             def can_read?(model, attribute = nil)
-                test(model,attribute){ |role| role.can_read?(model, attribute) }
+                test_access(model, attribute, :read){ |role| role.can_read?(model) }
             end
 
             # @param model [Skr::Model]
             # @param attribute [Symbol]
             # @return [Boolean] Can the User create and update the model?
             def can_write?(model, attribute = nil)
-                test(model,attribute){ |role| role.can_write?(model, attribute) }
+                test_access(model, attribute, :write){ |role| role.can_write?(model) }
             end
 
             # @param model [Skr::Model]
-            # @param id [Numberic] the id for the model
             # @return [Boolean] Can the User delete the model?
-            def can_delete?(type, model, id = nil)
-                test(model,attribute){ |role| role.can_delete?(model, attribute) }
+            def can_delete?(model)
+                @roles.each{ |role| role.can_delete?(model) }
             end
 
             # @param roles Role
@@ -56,14 +51,19 @@ module Skr
                 @roles.each{|r| yield r}
             end
 
+            def as_hash
+            end
           private
 
-            def test(model,attribute)
-                if attribute && locks = LockedFields.for(model,attribute)
-                    return include?(*locks)
+            # Test if the given roles grant access to the model
+            def test_access(model, attribute, access_type)
+                # Check if the attribute is locked
+                # If it is, the locks determine access, otherwise use the model's grants
+                roles = LockedFields.roles_needed_for(model, attribute, access_type)
+                if roles.empty?
+                    return @roles.detect { |role| yield role }.present?
                 else
-                    @roles.each{ |role| return true if yield role }
-                    return false
+                    roles.find { |role| @roles.include?(role) }
                 end
             end
 

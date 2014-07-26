@@ -7,7 +7,7 @@ module Skr
                 self.grant GlAccount, GlManualEntry, GlPosting, GlTransaction
                 self.read << GlPeriod
 
-                lock Customer, :terms_id
+                lock_writes Customer, :terms_id
             end
         end
 

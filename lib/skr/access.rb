@@ -11,9 +11,10 @@ end
 require_relative 'access/locked_fields'
 require_relative 'access/role'
 require_relative 'access/role_collection'
-require_relative 'access/roles_serializer'
+require_relative 'access/serializer'
 
 require_relative 'access/api_authentication_provider'
+
 if Skr.const_defined?('Workspace')
     require_relative 'access/workspace_screen'
     require_relative 'access/workspace_extension'

@@ -1,5 +1,1 @@
-module Skr
-    module Access
-        Role.grant_global_access(Skr::Address)
-    end
-end
+Role.grant_global_access(Skr::Address)
