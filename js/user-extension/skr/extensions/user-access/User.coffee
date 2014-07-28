@@ -21,6 +21,12 @@ class User
 
     canDelete: (model)      -> this.roles.canDelete(model)
 
+    isLoggedIn: ->
+        true
+
+
+    @attemptLogin = (login,password)->
+        #
 
 Skr.Extension.UserAccess.define_user = ->
     Skr.Data.User = Skr.Data.Model.extend(User)

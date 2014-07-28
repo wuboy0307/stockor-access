@@ -8,5 +8,9 @@ class UserAccessRegistration
     setBootstrapData: (data)->
         Skr.current_user = new Skr.Data.User( data.user, data.access)
 
+    onAvailable: (application)->
+        dialog = new Skr.Extension.UserAccess.LoginDialog
+        dialog.show() #unless Skr.current_user.isLoggedIn()
+
 
 Skr.Extension.Base.extend( UserAccessRegistration )

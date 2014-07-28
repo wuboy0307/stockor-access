@@ -3,10 +3,6 @@ RWD = ['read','write','delete']
 #UNIVERSAL_GRANTS = -> [ Skr.Data.Address ]
 
 
-class LockedField
-    constructor: (@klass,config)->
-        Skr.u.extend(this, config)
-
 class Role
 
     constructor: (config={})->

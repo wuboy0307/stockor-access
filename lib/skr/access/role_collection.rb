@@ -51,8 +51,6 @@ module Skr
                 @roles.each{|r| yield r}
             end
 
-            def as_hash
-            end
           private
 
             # Test if the given roles grant access to the model

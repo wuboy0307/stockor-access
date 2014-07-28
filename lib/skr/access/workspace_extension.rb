@@ -30,3 +30,12 @@ module Skr
         end
     end
 end
+
+Skr::API::Root.build_route Skr::User,
+    indestructible: true,
+    controller: Skr::Access::UsersController,
+    routes: {
+        get: [
+            { method: :login }
+        ]
+    }
