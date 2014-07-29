@@ -1,3 +1,4 @@
+
 class User
     constructor: (attributes,@access_data)->
         super
@@ -25,8 +26,25 @@ class User
         true
 
 
-    @attemptLogin = (login,password)->
-        #
+    @attemptLogin = (login,password, options)->
+        session = new Session( login: login, password: password )
+        success = options.success
+        options.success = (session)->
+            Skr.current_user = session.user
+            success.apply(options.scope, arguments)
+        session.save(options)
+
+class Session
+    constructor: -> super
+    api_path: 'login'
+    props_schema:
+        string: ['login','password','csrf_token']
+        number: ['user_id']
+
+    associations:
+        user: { model: User }
+
+Skr.Data.Model.extend(Session)
 
 Skr.Extension.UserAccess.define_user = ->
     Skr.Data.User = Skr.Data.Model.extend(User)

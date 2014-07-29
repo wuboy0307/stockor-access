@@ -1,7 +1,6 @@
 <div class="container">
     <div class="col-md-4 col-md-offset-4">
-
-
+        <div style="display:none" class="alert alert-danger" role="alert"></div>
         <form role="form">
             <div class="form-group">
                 <label for="LoginField">Login</label>

@@ -1,15 +1,18 @@
 module Skr
 
     module Access
-        class UsersController < API::Controller
 
-            def login
-            end
-
-          private
-
-            def perform_delete
+        Skr::API::Root.post "login" do
+            user = User.find_by(login: params.data.login)
+            if user && user.authenticate(params.data.password)
+                { success: true, message: "Login succeeded", data: { user: user.as_json } }
+            else
+                { success: false, message: "Login failed", data: {} }
             end
         end
+
     end
+
+
+    Skr::API::Root.build_route User
 end
