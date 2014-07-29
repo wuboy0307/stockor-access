@@ -18,3 +18,17 @@ task :guard => [ 'db:migrate', 'db:test:clone_structure' ] do
     # For now just shell out until I can figure it out
     sh "bundle exec guard"
 end
+
+desc "Open an irb session preloaded with skr-access"
+task :console do
+    require 'irb'
+    require 'irb/completion'
+    require 'pp'
+    require 'skr/access'
+
+    include Skr
+    Skr::Core::DB.establish_connection
+    ActiveRecord::Base.logger = Logger.new STDOUT
+    ARGV.clear
+    IRB.start
+end
