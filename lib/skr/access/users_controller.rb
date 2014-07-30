@@ -5,7 +5,7 @@ module Skr
         Skr::API::Root.post "login" do
             user = User.find_by(login: params.data.login)
             if user && user.authenticate(params.data.password)
-                { success: true, message: "Login succeeded", data: { user: user.as_json } }
+                { success: true, message: "Login succeeded", data: user.workspace_data }
             else
                 { success: false, message: "Login failed", data: {} }
             end

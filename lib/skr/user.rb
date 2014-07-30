@@ -19,8 +19,10 @@ module Skr
 
         def_delegators :roles, :can_create?, :can_read?, :can_update?, :can_delete?
 
-        def exposed_data
-            attributes.slice('login','name','email','created_at','created_by','updated_at','updated_by','role_names')
+        def workspace_data
+            my_data = attributes.slice('login','name','email','created_at',
+              'created_by','updated_at','updated_by','role_names')
+            { user: my_data, access: Access.for_user(self) }
         end
 
         # @param model [Skr::Model]
