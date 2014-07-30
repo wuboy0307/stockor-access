@@ -10,7 +10,7 @@ class UserAccessRegistration
 
     onAvailable: (application)->
         dialog = new Skr.Extension.UserAccess.LoginDialog
-        dialog.show() #unless Skr.current_user.isLoggedIn()
+        dialog.show() unless Skr.current_user.isLoggedIn()
 
 
 Skr.Extension.Base.extend( UserAccessRegistration )

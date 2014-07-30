@@ -23,7 +23,6 @@ class LoginDialog
             error: (session,reply)->
                 msg.show().text(reply.message)
                 this.$('.alert').show().text(reply.message)
-
         })
 
     onShown: -> this.get('.login').focus()
