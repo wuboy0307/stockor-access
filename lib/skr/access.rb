@@ -11,6 +11,8 @@ end
 require_relative 'access/locked_fields'
 require_relative 'access/role'
 require_relative 'access/role_collection'
+require_relative 'access/global_grants'
+
 require_relative 'access/serializer'
 require_relative 'access/api_authentication_provider'
 require_relative 'user'
