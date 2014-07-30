@@ -4,11 +4,11 @@
         <form role="form">
             <div class="form-group">
                 <label for="LoginField">Login</label>
-                <input type="email" id="LoginField" class="form-control login" placeholder="Enter Login">
+                <input type="email" id="LoginField" value="test" class="form-control login" placeholder="Enter Login">
             </div>
             <div class="form-group">
                 <label for="PasswordField">Password <a href="/sessions/forgot_password">(forgot password)</a></label>
-                <input type="password" id="PasswordField" class="form-control password" placeholder="Password">
+                <input type="password" id="PasswordField" value="testtest" class="form-control password" placeholder="Password">
             </div>
 
         </form>
