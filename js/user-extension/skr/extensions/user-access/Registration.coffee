@@ -2,7 +2,7 @@ class UserAccessRegistration
 
     identifier: 'users-management'
 
-    whenRegistered: ->
+    onRegistered: ->
         Skr.Extension.UserAccess.define_user()
 
     setBootstrapData: (data)->
