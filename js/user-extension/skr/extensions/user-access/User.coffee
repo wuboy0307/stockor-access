@@ -1,4 +1,3 @@
-
 class User
     constructor: (attributes,@access_data)->
         super
