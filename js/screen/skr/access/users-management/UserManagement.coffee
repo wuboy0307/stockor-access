@@ -1,4 +1,6 @@
-class Skr.View.Screens.UserManagement extends Skr.View.Screen
+class UserManagement
+    constructor: -> super
 
-    el: '<div>Hello Users!</div>'
-    initialize: ->
+    template: '<div>Hello Users!</div>'
+
+Skr.View.Screens.UserManagement = Skr.View.Screen.extend(UserManagement)

@@ -1,7 +1,6 @@
 class User
-    constructor: (attributes,@access_data)->
-        super
-        this
+
+    constructor: (attributes,@access_data)-> super
 
     derived:
         roles:
@@ -9,17 +8,16 @@ class User
             fn: ->
                 new Skr.Extension.UserAccess.RoleCollection( @access_data )
 
-    props_schema:
-        string: ['login', 'email' ]
-        number: ['id']
-        array:  ['role_names']
-        object: ['options']
-
+    props:
+        id:         { type: "integer", required:true }
+        login:      'string'
+        name:       'string'
+        email:      'string'
+        role_names: 'array'
+        options:    'object'
 
     canRead: (model,field)  -> this.roles.canRead(model,field)
-
     canWrite: (model,field) -> this.roles.canWrite(model,field)
-
     canDelete: (model)      -> this.roles.canDelete(model)
 
     isLoggedIn: ->
@@ -37,9 +35,12 @@ class User
 class Session
     constructor: -> super
     api_path: 'login'
-    props_schema:
-        string: ['login','password','csrf_token']
-        object: ['access','user']
+    props:
+        login:      'string'
+        password:   'string'
+        csrf_token: 'string'
+        access:     'object'
+        user:       'object'
 
 Skr.Data.Model.extend(Session)
 

@@ -1,5 +1,7 @@
 class UserAccessRegistration
 
+    constructor: -> super
+
     identifier: 'users-management'
 
     onRegistered: ->

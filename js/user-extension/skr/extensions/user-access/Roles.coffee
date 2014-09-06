@@ -37,7 +37,7 @@ class Skr.Extension.UserAccess.RoleCollection
 
 
     can:(method,model,field)->
-        if model instanceof Skr.Ampersand.Model
+        if model instanceof Skr.Data.Model
             model = model.constructor
 
         if field && ( locks = @locked_fields[model] ) && ( grants = locks[field] )
