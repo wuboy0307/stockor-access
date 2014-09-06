@@ -23,9 +23,10 @@ module Skr
             end
 
             class << self
-                def grant_global_access(klass)
+                def grant_global_access(klass,types=[:read,:write,:delete])
+                    types = [*types]
                     descendants.each do | child |
-                        [ child.read, child.write, child.delete ].each{ |a| a.push(klass) }
+                        types.each{ |type| child.send(type).push(klass) }
                     end
                 end
 

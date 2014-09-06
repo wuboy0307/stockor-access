@@ -49,5 +49,8 @@ module Skr
     end
 
     Core.config.user_model = User
-
+    Skr::Model.descendants.each do |klass|
+        klass.reflect_on_association(:updated_by).options[:class_name]='Skr::User'
+        klass.reflect_on_association(:created_by).options[:class_name]='Skr::User'
+    end
 end
