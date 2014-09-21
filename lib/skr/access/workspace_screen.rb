@@ -4,7 +4,7 @@ require 'skr/workspace'
 module Skr
     module Access
 
-        class WorkspaceScreen < Workspace::Screens::Definition
+        class WorkspaceScreen < Workspace::ScreenDefinition
 
             def specification
                 {
@@ -13,7 +13,8 @@ module Skr
                     description: 'Create and maintain Users',
                     icon: 'icon-user',
                     group_id: 'customers',
-                    view: 'UserManagement'
+                    view: 'UserManagement',
+                    model: 'User'
                 }
             end
 
