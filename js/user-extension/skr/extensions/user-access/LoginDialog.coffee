@@ -25,6 +25,6 @@ class LoginDialog
                 this.$('.alert').show().text(reply.message)
         })
 
-    onShown: -> this.get('.login').focus()
+    onShown: -> this.query('.login').focus()
 
 Skr.Extension.UserAccess.LoginDialog = Skr.Component.ModalDialog.extend(LoginDialog)

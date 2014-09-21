@@ -3,6 +3,6 @@
 //= require ./User
 //= require ./LoginDialog
 //= require ./login-dialog
-//= require ./Registration
+//= require ./Extension
 
 Skr.namespace("Extension.UserAccess");

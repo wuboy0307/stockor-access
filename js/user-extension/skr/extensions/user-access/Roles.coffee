@@ -24,6 +24,7 @@ class Administrator extends Role
 
 class Skr.Extension.UserAccess.RoleCollection
     constructor: (access)->
+        access={ roles: [], locked_fields: [] } if !access
         @roles = []
         for role in access.roles
             klass = Skr.Extension.UserAccess.RoleMap[role.type] || Role
@@ -65,5 +66,6 @@ class Skr.Extension.UserAccess.RoleCollection
 
 
 klassFor = (identifier)->
-    Skr.Data[ Skr.u.titleize(identifier).replace(" ","") ] ||
+    name = Skr.u.chain(identifier).titleize().gsub(' ','').value()
+    Skr.Data[name] ||
         Skr.warn("Role Data object not found for #{identifier}")
