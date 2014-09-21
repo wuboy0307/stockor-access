@@ -4,6 +4,7 @@ module Skr
 
             class Purchasing < Role
                 self.grant Vendor, PurchaseOrder
+                self.read << Customer
             end
 
         end

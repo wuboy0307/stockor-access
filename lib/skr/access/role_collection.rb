@@ -34,14 +34,6 @@ module Skr
                 @roles.each{ |role| role.can_delete?(model) }
             end
 
-            # @param roles Role
-            # @return [Boolean] Does the collection include any of the given role(s)?
-            def include?(*test_roles)
-                @roles.detect do |role|
-                    test_roles.include?(role)
-                end
-            end
-
             # @return [Array<symbol>] list of roles
             def to_sym
                 @roles.map{ |r| r.class.to_s.demodulize.downcase.to_sym }
@@ -59,9 +51,9 @@ module Skr
                 # If it is, the locks determine access, otherwise use the model's grants
                 roles = LockedFields.roles_needed_for(model, attribute, access_type)
                 if roles.empty?
-                    return @roles.detect { |role| yield role }.present?
+                    return !!@roles.detect { |role| yield role }.present?
                 else
-                    roles.find { |role| @roles.include?(role) }
+                    !!roles.find { |role| @roles.map(&:class).include?(role) }
                 end
             end
 
@@ -70,5 +62,10 @@ module Skr
     end
 end
 
-require 'require_all'
-require_rel 'roles/*.rb'
+require_relative "roles/accounting"
+require_relative "roles/customer_support"
+require_relative "roles/purchasing"
+
+# n.b. administrator comes last so it can
+# unlock all the locked fields
+require_relative "roles/administrator"
