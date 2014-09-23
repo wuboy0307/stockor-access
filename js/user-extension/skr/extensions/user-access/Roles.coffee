@@ -23,8 +23,8 @@ class Administrator extends Role
     can: -> true
 
 class Skr.Extension.UserAccess.RoleCollection
-    constructor: (access)->
-        access={ roles: [], locked_fields: [] } if !access
+    constructor: (access={})->
+        Skr.u.defaults(access, { roles: [], locked_fields: [] })
         @roles = []
         for role in access.roles
             klass = Skr.Extension.UserAccess.RoleMap[role.type] || Role
@@ -33,8 +33,8 @@ class Skr.Extension.UserAccess.RoleCollection
         for lock in access.locked_fields
             if klass = klassFor(lock.type)
                 @locked_fields[ klass ] = locks = {}
-                for field, grants of lock.locks
-                    locks[field] = grants
+                locks[field] = grants for field, grants of lock.locks
+
 
 
     can:(method,model,field)->
